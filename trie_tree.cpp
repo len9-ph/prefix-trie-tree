@@ -11,6 +11,41 @@ struct TrieTree::Node {
 TrieTree::TrieTree() : root(nullptr) {}
 TrieTree::~TrieTree() {}
 
+bool TrieTree::find(const  std::string& str) 
+{
+	find(root, str.begin());
+}
+
+
+bool TrieTree::insert(const std::string& str) 
+{
+    if(find(str))
+    {
+        insert(root, str.begin());
+        return true;
+    }   
+    else 
+        return false; //Такой эл-т уже есть
+	
+}
+
+bool TrieTree::erase(const  std::string& str) 
+{
+    if(find(str))
+    {
+        erase(root, str.begin());
+        return true;
+    }   
+    else 
+        return false; //Эл-та не существует - удалять нечего
+}
+
+void TrieTree::fromFile() 
+{
+
+}
+
+
 void TrieTree::insert(Node* root, std::string::const_iterator it) {
 	if (*it != '\0')
 	{
@@ -117,19 +152,3 @@ bool TrieTree::find(Node* _root, std::string::const_iterator it)
 	}
 }
 
-void TrieTree::insert(const std::string& str) {
-	insert(root, str.begin());
-}
-
-void TrieTree::erase(const  std::string& str) {
-	erase(root, str.begin());
-}
-
-bool TrieTree::find(const  std::string& str) 
-{
-	find(root, str.begin());
-}
-
-void TrieTree::fromFile() {
-
-}
