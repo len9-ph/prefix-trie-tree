@@ -9,13 +9,15 @@ class TrieTree {
 	void insert(Node*, std::string::const_iterator);
 	void erase(Node*&, std::string::const_iterator);
 	bool find(Node*, std::string::const_iterator);
+	void print(Node* _root);
 public:
 	TrieTree();
 	~TrieTree();
 
-	void insert(const std::string&);
-	void erase(const  std::string&);
+	bool insert(const std::string&);
+	bool erase(const  std::string&);
 	bool find(const  std::string&);
+	void print();
 
 	void fromFile();
 

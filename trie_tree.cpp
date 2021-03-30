@@ -11,6 +11,85 @@ struct TrieTree::Node {
 TrieTree::TrieTree() : root(nullptr) {}
 TrieTree::~TrieTree() {}
 
+void TrieTree::insert(Node* _root, std::string::const_iterator it) 
+{
+	if (*it != '\0')
+	{
+		if (_root->child == nullptr)
+		{
+			_root->child = new Node(*it);
+			_root = _root->child;
+			insert(_root, it++);
+		}
+		else
+		{
+			_root = _root->child;
+			if (_root->symbol == *it)
+				insert(_root, it++);
+			else
+			{
+				while (_root->sibling != nullptr && _root->symbol != *it) {
+					_root = _root->sibling;
+				}
+				if (_root->symbol == *it) 
+				{
+					insert(_root, it++);
+				}
+				else 
+				{
+					_root->sibling = new Node(*it);
+					insert(_root->sibling, it++);
+				}
+			}
+		}
+	}
+	else {
+		Node* end = new Node('$');
+		if (_root->child == nullptr)
+		{
+			_root->child = end;
+		}
+		else {
+			while (_root->sibling != nullptr) {
+				_root = _root->sibling;
+			}
+			_root->sibling = end;
+		}
+	}
+}
+
+void TrieTree::erase(Node*& root, std::string::const_iterator it) 
+{
+
+}
+
+bool TrieTree::find(Node* _root, std::string::const_iterator it)
+{
+	if (_root->child == nullptr)
+		return false;
+	_root = _root->child;
+	char _symbol;
+	if (*it == '\0')
+		_symbol = '$';
+	else
+		_symbol = *it;
+	if (_root->symbol == _symbol && _root->symbol != '&')
+		find(_root, it++);
+	else 
+	{
+		while (_root->sibling != nullptr && _root->symbol != _symbol)
+			_root = _root->sibling;
+		if (_root->symbol == _symbol)
+		{
+			if (_symbol == '&')
+				return true;
+			else
+				find(_root, it++);
+		}
+		return false;
+	}
+}
+
 bool TrieTree::find(const  std::string& str) 
 {
 	find(root, str.begin());
@@ -40,115 +119,14 @@ bool TrieTree::erase(const  std::string& str)
         return false; //Эл-та не существует - удалять нечего
 }
 
-void TrieTree::fromFile() 
+void TrieTree::print
+
+void TrieTree::print()
 {
-
-}
-
-
-void TrieTree::insert(Node* root, std::string::const_iterator it) {
-	if (*it != '\0')
+	if(root != nullptr)
 	{
-		if (root->child == nullptr)
-		{
-			root->child = new Node(*it);
-			/*insert(root->child, it++);*/
-			root = root->child;
-			insert(root, it++);
-		}
-		else
-		{
-			root = root->child;
-			if (root->symbol == *it)
-				insert(root, it++);
-			else
-			{
-				while (root->sibling != nullptr && root->symbol != *it) {
-					root = root->sibling;
-				}
-				if (root->symbol == *it) {
-					/*insert(root->child, it++);*/
-					//root = root->child;
-					insert(root, it++);
-				}
-				else {
-					root->sibling = new Node(*it);
-					/*insert(root->sibling, it++);*/
-					//root = root->sibling;
-					insert(root->sibling, it++);
-				}
-			}
-		}
-		//insert(root, it++);
-	}
-	else {
-		Node* end = new Node('$');
-		if (root->child == nullptr)
-		{
-			root->child = end;
-		}
-		else {
-			while (root->sibling != nullptr) {
-				root = root->sibling;
-			}
-			root->sibling = end;
-		}
+		cout<<root->symbol<<"  ";
+		print(root->child);
+		print(root->sibling);
 	}
 }
-
-void TrieTree::erase(Node*& root, std::string::const_iterator it) 
-{
-
-}
-
-//bool trietree::find(node* root, std::string::const_iterator it) {
-//	if (root->child == nullptr) 
-//		return false;
-//	root = root->child;
-//	char _symbol;
-//	if (*it == '\0') 
-//		_symbol = '$'; 
-//	else 
-//		_symbol = *it;
-//	while (root->sibling != nullptr && root->child->symbol != _symbol) 
-//	{
-//		root = root->sibling;
-//	}
-//	if (root->symbol == _symbol) 
-//	{
-//		if (_symbol == '$') 
-//			return true; 
-//		else 
-//			find(root, it++);
-//	}
-//	else 
-//		return false;
-//}
-
-bool TrieTree::find(Node* _root, std::string::const_iterator it)
-{
-	if (_root->child == nullptr)
-		return false;
-	_root = _root->child;
-	char _symbol;
-	if (*it == '\0')
-		_symbol = '$';
-	else
-		_symbol = *it;
-	if (_root->symbol == _symbol && _root->symbol != '&')
-		find(_root, it++);
-	else 
-	{
-		while (_root->sibling != nullptr && _root->symbol != _symbol)
-			_root = _root->sibling;
-		if (_root->symbol == _symbol)
-		{
-			if (_symbol == '&')
-				return true;
-			else
-				find(_root, it++);
-		}
-		return false;
-	}
-}
-
